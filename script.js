@@ -4,12 +4,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const mobileNavPanel = document.querySelector('.mobile-nav');   // The slide-in panel
     const closeMenuIcon = document.querySelector('.close-menu');    // Close icon inside the panel
 
+    // Toggle mobile menu
     if (mobileMenuIcon && mobileNavPanel) {
-        mobileMenuIcon.addEventListener('click', function () {
+        mobileMenuIcon.addEventListener('click', function (e) {
+            e.stopPropagation(); // Prevent event from bubbling to document
             mobileNavPanel.classList.add('active'); // Show the panel
         });
     }
 
+    // Close menu with close button
     if (closeMenuIcon && mobileNavPanel) {
         closeMenuIcon.addEventListener('click', function () {
             mobileNavPanel.classList.remove('active'); // Hide the panel
