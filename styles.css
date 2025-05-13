@@ -134,7 +134,10 @@ header {
     justify-content: space-between;
     align-items: center;
   }
-  
+  .Hero-logo{
+    width: 150px;
+    height: 50px;
+  }
   .logo img {
     height: 35px;
   }
@@ -2175,7 +2178,7 @@ h1 {
         grid-template-columns: 1fr 1fr;
     }
     .footer {
-        margin-top: -15%;
+        margin-top: -12%;
     }
     .cta-content {
         flex-direction: column;
