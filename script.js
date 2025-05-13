@@ -1,46 +1,44 @@
 // Mobile Menu Toggle
-document.addEventListener('DOMContentLoaded', function() {
-    // Mobile menu toggle
-    const mobileMenuBtn = document.querySelector('.mobile-menu');
-    const body = document.body;
-    
-    if (mobileMenuBtn) {
-        mobileMenuBtn.addEventListener('click', function() {
-            // Create mobile nav if it doesn't exist
-            if (!document.querySelector('.mobile-nav')) {
-                const mobileNav = document.createElement('div');
-                mobileNav.className = 'mobile-nav';
-                
-                const mobileNavHeader = document.createElement('div');
-                mobileNavHeader.className = 'mobile-nav-header';
-                
-                const logo = document.querySelector('.logo').cloneNode(true);
-                const closeBtn = document.createElement('div');
-                closeBtn.className = 'close-menu';
-                closeBtn.innerHTML = '<i class="fas fa-times"></i>';
-                
-                mobileNavHeader.appendChild(logo);
-                mobileNavHeader.appendChild(closeBtn);
-                
-                const navItems = document.querySelector('nav').cloneNode(true);
-                
-                mobileNav.appendChild(mobileNavHeader);
-                mobileNav.appendChild(navItems);
-                
-                body.appendChild(mobileNav);
-                
-                // Close menu event
-                closeBtn.addEventListener('click', function() {
-                    mobileNav.classList.remove('active');
-                });
-            }
-            
-            // Toggle mobile nav
-            const mobileNav = document.querySelector('.mobile-nav');
-            mobileNav.classList.add('active');
+document.addEventListener('DOMContentLoaded', function () {
+    const mobileMenuIcon = document.querySelector('.mobile-menu'); // Hamburger icon
+    const mobileNavPanel = document.querySelector('.mobile-nav');   // The slide-in panel
+    const closeMenuIcon = document.querySelector('.close-menu');    // Close icon inside the panel
+
+    if (mobileMenuIcon && mobileNavPanel) {
+        mobileMenuIcon.addEventListener('click', function () {
+            mobileNavPanel.classList.add('active'); // Show the panel
         });
     }
-    
+
+    if (closeMenuIcon && mobileNavPanel) {
+        closeMenuIcon.addEventListener('click', function () {
+            mobileNavPanel.classList.remove('active'); // Hide the panel
+        });
+    }
+
+    // Close panel when clicking on a nav link inside it
+    if (mobileNavPanel) {
+        const mobileNavLinks = mobileNavPanel.querySelectorAll('nav a'); 
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                const href = this.getAttribute('href');
+                if (href && href.startsWith('#')) { // Only close for anchor links
+                    mobileNavPanel.classList.remove('active');
+                }
+            });
+        });
+    }
+
+    // Close panel when clicking outside
+    document.addEventListener('click', function(event) {
+        if (mobileNavPanel && mobileNavPanel.classList.contains('active')) {
+            const isClickOnMenuIcon = mobileMenuIcon ? mobileMenuIcon.contains(event.target) : false;
+            if (!mobileNavPanel.contains(event.target) && !isClickOnMenuIcon) {
+                mobileNavPanel.classList.remove('active');
+            }
+        }
+    });
+
     // FAQ Accordion
     const faqItems = document.querySelectorAll('.faq-item');
     faqItems.forEach(item => {
@@ -72,28 +70,24 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Smooth scroll for navigation links
-    const navLinks = document.querySelectorAll('nav a');
-    
-    navLinks.forEach(link => {
+    const allNavLinks = document.querySelectorAll('nav a'); // This targets desktop nav and mobile nav if structured as <div class="mobile-nav"><nav><a>...
+
+    allNavLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             const href = this.getAttribute('href');
-            
-            // Only process internal links
-            if (href.startsWith('#') && href.length > 1) {
+
+            if (href && href.startsWith('#') && href.length > 1) {
                 e.preventDefault();
-                
                 const targetSection = document.querySelector(href);
-                
                 if (targetSection) {
                     window.scrollTo({
-                        top: targetSection.offsetTop - 100,
+                        top: targetSection.offsetTop - 100, // Adjust offset as needed
                         behavior: 'smooth'
                     });
-                    
+
                     // Close mobile menu if open
-                    const mobileNav = document.querySelector('.mobile-nav');
-                    if (mobileNav && mobileNav.classList.contains('active')) {
-                        mobileNav.classList.remove('active');
+                    if (mobileNavPanel && mobileNavPanel.classList.contains('active')) {
+                        mobileNavPanel.classList.remove('active');
                     }
                 }
             }
